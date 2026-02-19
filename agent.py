@@ -1,7 +1,5 @@
 """Agent logic - connects to Ollama with Grok/Manus/Claude/Emergent style."""
 
-import json
-import re
 from typing import Generator
 
 import ollama

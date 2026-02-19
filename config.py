@@ -1,4 +1,4 @@
-"""Configuration for Private AI Agent."""
+"""Configuration for ORION-X AI Agent."""
 
 # Ollama connection (default - runs locally)
 OLLAMA_HOST = "http://localhost:11434"
