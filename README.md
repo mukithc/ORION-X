@@ -3,6 +3,11 @@
 A local AI agent with **Grok + Manus + Claude + Emergent** style, powered by your Ollama models.  
 GUI included — no API keys, no cloud. Everything runs on your machine.
 
+## Branches
+
+- `main` — stable release
+- `ai-bot` — active development
+
 ## What You Get
 
 - **Agent personality** combining:
@@ -56,3 +61,15 @@ For a more advanced agent (browser automation, code execution, multi-step tasks)
 3. Use [OpenManus-GUI](https://github.com/Hank-Chromela/OpenManus-GUI) for a Gradio interface
 
 Requirements: 16GB+ RAM, strong GPU (e.g. RTX 4090) for best performance.
+
+## Push to GitHub
+
+1. Create a new repo at [github.com/new](https://github.com/new) (e.g. `privater-ai` or `private-ai-agent`)
+2. Run:
+
+```powershell
+cd "c:\Users\mukit\OneDrive\Desktop\privater ai"
+git remote add origin https://github.com/YOUR_USERNAME/YOUR_REPO_NAME.git
+git push -u origin main
+git push -u origin ai-bot
+```
