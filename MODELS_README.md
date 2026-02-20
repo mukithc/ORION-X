@@ -1,52 +1,44 @@
 # ORION-X Model Guide
 
-## Why Not All "Free" Models?
+## Download All Open-Source Models
 
-The models you listed include **229B, 403B, 754B, and 1T parameter** models. These need **100GB+ VRAM** and won't run on consumer PCs. We include only models that fit on 8–24GB systems.
+**Option 1: `download_all_models.bat`** — Double-click to run
 
-## Download Practical Models
-
-**Option 1: Double-click `download_models.bat`**
-
-**Option 2: Manual**
+**Option 2: Python**
 ```powershell
-ollama pull llama3.2:3b
-ollama pull mistral:7b
-ollama pull qwen2.5:7b
-# etc.
+python download_all_models.py
 ```
+- Choice 1: Ollama native only
+- Choice 2: Ollama + Hugging Face (enable HF Ollama first)
+- Choice 3: Hugging Face only
 
-## Models Included
+**Hugging Face setup:** https://huggingface.co/settings/local-apps → enable Ollama
 
-| Model | Size | Use |
-|-------|------|-----|
-| llama3.2:3b | 2GB | Fast chat |
-| llama3.2:1b | 1.3GB | Very fast |
-| mistral:7b | 4.1GB | Strong 7B |
-| phi3:mini | 2.3GB | Efficient |
-| qwen2.5:7b | 4.7GB | Reasoning |
-| gemma2:2b | 1.6GB | Small |
-| deepseek-r1:1.5b | 1GB | Reasoning |
-| codellama:7b | 4.3GB | Code |
-| nomic-embed-text | 274MB | Embeddings |
+## Models Included (Open Source Only)
 
-## Hugging Face Models
+### Ollama Native
+| Model | Size |
+|-------|------|
+| llama3.2:3b, llama3.2:1b | 2GB, 1.3GB |
+| mistral:7b, phi3:mini | 4.1GB, 2.3GB |
+| qwen2.5:7b, gemma2:2b | 4.7GB, 1.6GB |
+| deepseek-r1:1.5b | 1GB |
+| codellama:7b, qwen2.5-coder:7b | 4.3GB |
+| llama3.1:8b | 4.7GB |
+| nomic-embed-text | 274MB |
 
-1. Enable at: https://huggingface.co/settings/local-apps
-2. Run:
-```powershell
-ollama run hf.co/Nanbeige/Nanbeige4.1-3B
-ollama run hf.co/openbmb/MiniCPM-SALA
-```
+### Hugging Face GGUF
+| Model | Params |
+|-------|--------|
+| Nanbeige4.1-3B, QED-Nano | 4B |
+| MiniCPM-SALA, MiniCPM-o-4_5 | 8-9B |
+| Nemotron-Nano-9B-Japanese | 9B |
+| gpt-oss-20b-GGUF | 21B |
+| GLM-4.7-Flash-REAP-23B | 23B |
+| GLM-4.7-Flash, Qwen3-Coder-30B | 30-31B |
 
-## Large Models (Enterprise Only)
+## Skipped (Too Large / Not Open)
 
-| Model | Params | VRAM Needed |
-|-------|--------|-------------|
-| MiniMax-M2.5 | 229B | ~120GB+ |
-| Qwen3.5-397B | 403B | ~200GB+ |
-| GLM-5 | 754B | ~400GB+ |
-| Ring-2.5 | 1T | ~500GB+ |
-| Kimi-K2.5 | 171B | ~90GB+ |
-
-Use cloud APIs (Groq, Together, etc.) for these.
+- **229B+** (MiniMax-M2.5, Qwen3.5-397B, GLM-5, Kimi-K2.5) — need 100GB+ VRAM
+- **1T** (Ring-2.5, Ling-2.5) — enterprise only
+- **Proprietary** — use cloud APIs instead
