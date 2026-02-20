@@ -10,6 +10,7 @@ GUI included — no API keys, no cloud. Everything runs on your machine.
 
 ## What You Get
 
+- **Agent tools**: Calculator, web search (DuckDuckGo)
 - **Agent personality** combining:
   - **Grok**: Witty, direct, bold
   - **Manus**: Task planning and execution

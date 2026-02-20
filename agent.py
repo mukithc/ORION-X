@@ -6,6 +6,7 @@ import ollama
 from ollama import Client
 
 from config import OLLAMA_HOST, DEFAULT_MODEL, SYSTEM_PROMPT
+from tools import process_with_tools
 
 
 def get_available_models() -> list[str]:
@@ -64,6 +65,7 @@ def chat_simple(
     user_message: str,
     history: list,
     model: str = DEFAULT_MODEL,
+    use_tools: bool = True,
 ) -> Generator[str, None, None]:
     """Simple chat for Gradio - converts history to messages."""
     messages = []
@@ -76,6 +78,9 @@ def chat_simple(
             user, assistant = h[0], h[1] if len(h) > 1 else ""
             messages.append({"role": "user", "content": str(user)})
             messages.append({"role": "assistant", "content": str(assistant)})
-    messages.append({"role": "user", "content": user_message})
+
+    # Apply tools (calculator, web search) if enabled
+    final_message = process_with_tools(user_message) if use_tools else user_message
+    messages.append({"role": "user", "content": final_message})
 
     yield from chat(messages, model=model, stream=True)

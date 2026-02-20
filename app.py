@@ -74,7 +74,8 @@ def build_ui():
             description=None,
             examples=[
                 "Plan a 3-day trip to Tokyo",
-                "Write a Python script to sort a list",
+                "Calculate 123 * 456",
+                "Search for latest AI news",
                 "Explain quantum computing in simple terms",
             ],
         )

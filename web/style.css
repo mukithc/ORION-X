@@ -55,12 +55,35 @@ body {
   margin-top: 0.25rem;
 }
 
-.model-select {
+.header-actions {
   margin-top: 1rem;
   display: flex;
   align-items: center;
   justify-content: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.model-select {
+  display: flex;
+  align-items: center;
   gap: 0.5rem;
+}
+
+.clear-btn {
+  background: var(--bg-input);
+  border: 1px solid var(--border);
+  color: var(--text-muted);
+  padding: 0.4rem 0.8rem;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.clear-btn:hover {
+  color: var(--text);
+  border-color: var(--text-muted);
 }
 
 .model-select label {

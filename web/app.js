@@ -4,6 +4,7 @@ const form = document.getElementById('chat-form');
 const input = document.getElementById('input');
 const sendBtn = document.getElementById('send-btn');
 const modelSelect = document.getElementById('model');
+const clearBtn = document.getElementById('clear-btn');
 
 // Load models on startup
 async function loadModels() {
@@ -48,9 +49,14 @@ function updateLastMessage(content) {
   messagesEl.scrollTop = messagesEl.scrollHeight;
 }
 
+let abortController = null;
+
 async function sendMessage() {
   const text = input.value.trim();
   if (!text) return;
+
+  abortController?.abort();
+  abortController = new AbortController();
 
   input.value = '';
   input.style.height = 'auto';
@@ -60,11 +66,14 @@ async function sendMessage() {
 
   typingEl.style.display = 'flex';
   sendBtn.disabled = true;
+  sendBtn.innerHTML = '<svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="6" width="12" height="12"/></svg>';
+  sendBtn.title = 'Stop';
 
   const assistantMsg = { role: 'assistant', content: '' };
   addMessage('assistant', '');
   history.push(assistantMsg);
 
+  let fullContent = '';
   try {
     const res = await fetch('/api/chat', {
       method: 'POST',
@@ -74,6 +83,7 @@ async function sendMessage() {
         model: modelSelect.value,
         history: history.slice(0, -1),
       }),
+      signal: abortController.signal,
     });
 
     if (!res.ok) throw new Error(res.statusText);
@@ -102,17 +112,29 @@ async function sendMessage() {
 
     assistantMsg.content = fullContent;
   } catch (e) {
-    updateLastMessage(`Error: ${e.message}. Is Ollama running? Try: ollama serve`);
-    history.pop();
+    if (e.name === 'AbortError') {
+      const stopped = fullContent ? fullContent + '\n\n[Stopped]' : '[Stopped]';
+      updateLastMessage(stopped);
+      assistantMsg.content = stopped;
+    } else {
+      updateLastMessage(`Error: ${e.message}. Is Ollama running? Try: ollama serve`);
+      history.pop();
+    }
   } finally {
     typingEl.style.display = 'none';
     sendBtn.disabled = false;
+    sendBtn.innerHTML = '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg>';
+    sendBtn.title = 'Send';
   }
 }
 
 form.addEventListener('submit', (e) => {
   e.preventDefault();
-  sendMessage();
+  if (sendBtn.title === 'Stop') {
+    abortController?.abort();
+  } else {
+    sendMessage();
+  }
 });
 
 // Auto-resize textarea
@@ -126,6 +148,11 @@ input.addEventListener('keydown', (e) => {
     e.preventDefault();
     sendMessage();
   }
+});
+
+clearBtn.addEventListener('click', () => {
+  messagesEl.innerHTML = '';
+  history = [];
 });
 
 loadModels();

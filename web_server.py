@@ -13,6 +13,7 @@ from pydantic import BaseModel
 
 from agent import chat, get_available_models
 from config import DEFAULT_MODEL, OLLAMA_HOST
+from tools import process_with_tools
 
 app = FastAPI(title="ORION-X", version="1.0")
 
@@ -59,7 +60,8 @@ async def chat_stream(request: ChatRequest):
             if isinstance(content, list) and content:
                 content = content[0].get("text", "") if isinstance(content[0], dict) else ""
             messages.append({"role": role, "content": str(content)})
-        messages.append({"role": "user", "content": request.message})
+        final_message = process_with_tools(request.message)
+        messages.append({"role": "user", "content": final_message})
 
         for chunk in chat(messages, model=request.model, stream=True):
             yield f"data: {json.dumps({'content': chunk})}\n\n"
