@@ -10,7 +10,7 @@ from config import DEFAULT_MODEL
 
 
 def chat_fn(message, history, model):
-    """Stream response for Gradio ChatInterface."""
+    """Stream response for Gradio."""
     history = history or []
     for chunk in chat_simple(message, history, model=model):
         yield chunk
@@ -21,79 +21,84 @@ def build_ui():
     models = get_available_models()
     default = DEFAULT_MODEL if DEFAULT_MODEL in models else (models[0] if models else "llama2:latest")
 
+    css = """
+    .orion-header { text-align: center; padding: 1.5rem 0; }
+    .orion-logo {
+        font-size: 2rem;
+        font-weight: 700;
+        background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+    .orion-tagline { color: #64748b; font-size: 0.9rem; margin-top: 0.25rem; }
+    .orion-footer { text-align: center; padding: 0.75rem; color: #64748b; font-size: 0.8rem; }
+    """
+
     with gr.Blocks(
-        title="ORION-X | Private AI Agent",
-        theme=gr.themes.Soft(
-            primary_hue="indigo",
-            secondary_hue="slate",
-        ),
-        css="""
-        .orion-header {
-            text-align: center;
-            padding: 1.5rem 0;
-            background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            font-size: 2rem;
-            font-weight: 800;
-        }
-        .orion-subtitle {
-            color: #64748b;
-            font-size: 0.95rem;
-        }
-        footer { color: #94a3b8; font-size: 0.85rem; }
-        """,
+        title="ORION-X | Private AI",
+        theme=gr.themes.Soft(primary_hue="blue", secondary_hue="slate"),
+        css=css,
     ) as demo:
         gr.HTML(
-            """
-            <div class="orion-header">ORION-X</div>
-            <p class="orion-subtitle">Grok + Manus + Claude + Emergent — Your local autonomous agent. Powered by Ollama.</p>
-            """
+            '<div class="orion-header">'
+            '<div class="orion-logo">ORION-X</div>'
+            '<p class="orion-tagline">Private AI · Powered by Ollama</p>'
+            '</div>'
         )
 
-        model_dropdown = gr.Dropdown(
-            choices=models,
-            value=default,
-            label="Model",
+        with gr.Row():
+            model_dropdown = gr.Dropdown(
+                choices=models,
+                value=default,
+                label="Model",
+                scale=1,
+            )
+
+        chatbot = gr.Chatbot(
+            height=500,
+            show_copy_button=True,
         )
 
-        def chat_with_model(message, history, model):
-            yield from chat_fn(message, history, model)
-
-        gr.ChatInterface(
-            fn=chat_with_model,
-            additional_inputs=[model_dropdown],
-            chatbot=gr.Chatbot(height=500, show_copy_button=True),
-            textbox=gr.Textbox(
-                placeholder="Ask me anything. Give me a task. I'll plan and execute...",
+        with gr.Row():
+            msg = gr.Textbox(
+                placeholder="Throw me a hard one. I'm ready.",
+                show_label=False,
+                scale=9,
                 container=False,
-                scale=7,
-            ),
-            title=None,
-            description=None,
+            )
+            submit_btn = gr.Button("Send", variant="primary", scale=1)
+
+        gr.Examples(
             examples=[
                 "Plan a 3-day trip to Tokyo",
                 "Calculate 123 * 456",
                 "Search for latest AI news",
-                "Explain quantum computing in simple terms",
             ],
+            inputs=msg,
+            label="Try",
         )
 
-        gr.Markdown(
-            """
-            ---
-            *Uses your local Ollama models. No API keys. Data stays on your machine.*
-            """
-        )
+        def respond(message, history, model):
+            history = history or []
+            for chunk in chat_fn(message, history, model):
+                yield history + [(message, chunk)]
+
+        msg.submit(
+            respond,
+            inputs=[msg, chatbot, model_dropdown],
+            outputs=chatbot,
+        ).then(lambda: "", outputs=msg)
+        submit_btn.click(
+            respond,
+            inputs=[msg, chatbot, model_dropdown],
+            outputs=chatbot,
+        ).then(lambda: "", outputs=msg)
+
+        gr.HTML('<div class="orion-footer">Calculator & web search · Local Ollama</div>')
 
     return demo
 
 
 if __name__ == "__main__":
     demo = build_ui()
-    demo.launch(
-        server_name="127.0.0.1",
-        server_port=7860,
-        share=False,
-    )
+    demo.launch(server_name="127.0.0.1", server_port=7860, share=False)
