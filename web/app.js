@@ -4,7 +4,8 @@ const form = document.getElementById('chat-form');
 const input = document.getElementById('input');
 const sendBtn = document.getElementById('send-btn');
 const modelSelect = document.getElementById('model');
-const clearBtn = document.getElementById('clear-btn');
+const welcomeEl = document.getElementById('welcome');
+const newChatBtn = document.getElementById('new-chat-btn');
 
 // Load models on startup
 async function loadModels() {
@@ -26,9 +27,10 @@ async function loadModels() {
 let history = [];
 
 function addMessage(role, content) {
+  welcomeEl?.classList.add('hidden');
   const msg = document.createElement('div');
   msg.className = `message ${role}`;
-  const avatar = role === 'user' ? 'U' : 'X';
+  const avatar = role === 'user' ? 'U' : 'O';
   msg.innerHTML = `
     <div class="message-avatar">${avatar}</div>
     <div class="message-content">${escapeHtml(content)}</div>
@@ -90,7 +92,6 @@ async function sendMessage() {
 
     const reader = res.body.getReader();
     const decoder = new TextDecoder();
-    let fullContent = '';
 
     while (true) {
       const { done, value } = await reader.read();
@@ -150,9 +151,12 @@ input.addEventListener('keydown', (e) => {
   }
 });
 
-clearBtn.addEventListener('click', () => {
+function clearChat() {
   messagesEl.innerHTML = '';
   history = [];
-});
+  welcomeEl?.classList.remove('hidden');
+}
+
+newChatBtn.addEventListener('click', clearChat);
 
 loadModels();

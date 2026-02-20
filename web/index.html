@@ -6,43 +6,65 @@
   <title>ORION-X | Private AI</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/static/style.css">
 </head>
 <body>
   <div class="app">
-    <header class="header">
-      <h1 class="logo">ORION-X</h1>
-      <p class="tagline">Private AI · Powered by Ollama</p>
-      <div class="header-actions">
-        <div class="model-select">
-          <label for="model">Model</label>
-          <select id="model">
-            <option value="llama2:latest">Loading...</option>
-          </select>
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <span class="logo-icon">O</span>
+        <span class="logo-text">ORION-X</span>
+      </div>
+      <button type="button" id="new-chat-btn" class="new-chat-btn">
+        <span class="icon">+</span> New Chat
+      </button>
+      <nav class="nav">
+        <a href="#" class="nav-item"><span class="icon">🌐</span> Web Search</a>
+        <a href="#" class="nav-item"><span class="icon">📄</span> Docs</a>
+        <a href="#" class="nav-item"><span class="icon">🔬</span> Deep Research</a>
+        <a href="#" class="nav-item"><span class="icon">⚡</span> Agent</a>
+      </nav>
+      <div class="chat-history">
+        <div class="section-title">Chat History</div>
+        <div id="history-list" class="history-list">
+          <div class="history-item active">Current Chat</div>
         </div>
-        <button type="button" id="clear-btn" class="clear-btn" title="Clear chat">Clear</button>
       </div>
-    </header>
+    </aside>
 
-    <main class="chat-container">
-      <div id="messages" class="messages"></div>
-      <div id="typing" class="typing" style="display: none;">
-        <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+    <main class="main">
+      <div id="chat-view" class="chat-view">
+        <div id="welcome" class="welcome">
+          <h1 class="brand-title">ORION-X</h1>
+          <p class="brand-tagline">Private AI · Powered by Ollama</p>
+          <p class="brand-hint">Throw me a hard one. I'm ready.</p>
+        </div>
+        <div id="messages" class="messages"></div>
+        <div id="typing" class="typing" style="display: none;">
+          <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+        </div>
       </div>
-      <form id="chat-form" class="input-area">
-        <textarea id="input" placeholder="Ask me anything. Try: calculate 123*456, search for news..." rows="1"></textarea>
-        <button type="submit" id="send-btn" aria-label="Send">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/>
-          </svg>
-        </button>
-      </form>
+
+      <div class="input-wrapper">
+        <form id="chat-form" class="input-area">
+          <div class="input-box">
+            <textarea id="input" placeholder="Throw me a hard one. I'm ready." rows="1"></textarea>
+            <div class="input-footer">
+              <span class="input-badge"><span class="icon">✓</span> Agent</span>
+              <div class="input-actions">
+                <select id="model" class="model-select-inline" title="Model"></select>
+                <button type="submit" id="send-btn" class="send-btn" aria-label="Send">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/>
+                  </svg>
+                </button>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
     </main>
-
-    <footer class="footer">
-      Calculator & web search · Local Ollama · No API keys
-    </footer>
   </div>
   <script src="/static/app.js"></script>
 </body>
