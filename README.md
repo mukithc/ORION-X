@@ -47,6 +47,18 @@ Or double-click **run.bat** on Windows.
 
 Go to **http://127.0.0.1:7860**
 
+## Web Version
+
+A standalone web app (HTML/CSS/JS) connected to Ollama:
+
+```powershell
+uvicorn web_server:app --host 0.0.0.0 --port 8080
+```
+
+Or double-click **run_web.bat**. Then open **http://127.0.0.1:8000**
+
+- Access from other devices on your network (phone, tablet) at `http://YOUR_IP:8000`
+
 ## Optional: Custom ORION-X Model
 
 Create a custom Ollama model with the ORION-X personality:
@@ -79,10 +91,16 @@ Requirements: 16GB+ RAM, strong GPU (e.g. RTX 4090) for best performance.
 ```
 ORION-X/
 ├── app.py          # Gradio UI
+├── web_server.py   # Web app (FastAPI + HTML)
+├── web/            # Web frontend
+│   ├── index.html
+│   ├── style.css
+│   └── app.js
 ├── agent.py        # Ollama chat logic
 ├── config.py       # Settings & system prompt
 ├── Modelfile       # Custom Ollama model (optional)
-├── run.bat         # Windows launcher
+├── run.bat         # Gradio launcher
+├── run_web.bat     # Web launcher
 ├── requirements.txt
 └── README.md
 ```
